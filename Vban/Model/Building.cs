@@ -2,9 +2,8 @@ namespace Vban.Model
 {
     public interface IFactory<T>
     {
-        T Create();
-
-        int Counter();
+        int Counter { get; }
+        T   Create();
     }
 
     public interface IBuilder<T>
