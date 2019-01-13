@@ -32,8 +32,10 @@ namespace Vban
 
         public static byte[] TrimArray(byte[] bytes, int size)
         {
+            bool app = bytes.Length < size;
             byte[] nw = new byte[size];
-            Array.Copy(bytes, nw, size);
+            Array.Copy(bytes, nw, app ? bytes.Length : size);
+            if (app) Array.Fill(nw, (byte) 0, bytes.Length, size - bytes.Length);
             return nw;
         }
 
