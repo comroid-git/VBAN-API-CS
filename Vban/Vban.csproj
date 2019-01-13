@@ -2,6 +2,18 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>0.1.0</PackageVersion>
+        <Title>VBAN Remote API</Title>
+        <Authors>Kaleidox "burdoto"</Authors>
+        <Description>C# port of burdoto's Java VBAN-API</Description>
+        <PackageProjectUrl>https://github.com/burdoto/VBAN-API-CS</PackageProjectUrl>
+        <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</PackageLicenseUrl>
+        <PackageIconUrl>http://kaleidox.de/VBAN.png</PackageIconUrl>
+        <RepositoryUrl>https://github.com/burdoto/VBAN-API-CS</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <PackageTags>vban, vb-audio, vban-api, voicemeeter, remote, audio</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
