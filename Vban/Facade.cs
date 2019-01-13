@@ -43,6 +43,7 @@ namespace Vban
         public void SendData(T data)
         {
             Write(GetBytes(data));
+            Flush();
         }
 
         public override void Write(byte value)
