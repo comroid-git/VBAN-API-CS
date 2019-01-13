@@ -27,12 +27,14 @@ namespace Vban
             char[] chars = txt.ToCharArray();
             for (int i = 0; i < chars.Length; i++)
                 bytes[i] = (byte) chars[i];
+            return bytes;
         }
 
         public static byte[] TrimArray(byte[] bytes, int size)
         {
             byte[] nw = new byte[size];
             Array.Copy(bytes, nw, size);
+            return nw;
         }
 
         public static byte[] IntToByteArray(int integer, int size)
