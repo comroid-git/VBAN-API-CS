@@ -1,6 +1,7 @@
 using System;
 using Vban.Constants;
 using Vban.Model;
+using static Vban.Util;
 
 namespace Vban.Packet
 {
@@ -19,13 +20,13 @@ namespace Vban.Packet
                 int        frame)
         {
             byte[] tmp = new byte[0];
-            tmp = Util.AppendByteArray(tmp, Util.ToByteArray("VBAN"));
-            tmp = Util.AppendByteArray(tmp, (byte) ((int) protocol | (int) sampleRate));
-            tmp = Util.AppendByteArray(tmp,
-                    (byte) Util.CheckRange(0, 255, samples), (byte) Util.CheckRange(0, 255, channel));
-            tmp   = Util.AppendByteArray(tmp, (byte) ((int) format | (int) codec));
-            tmp   = Util.AppendByteArray(tmp, Util.TrimArray(Util.ToByteArray(streamName), 16));
-            Bytes = Util.AppendByteArray(tmp, Util.IntToByteArray(frame, 4));
+            tmp = AppendByteArray(tmp, ToByteArray("VBAN"));
+            tmp = AppendByteArray(tmp, (byte) ((int) protocol | (int) sampleRate));
+            tmp = AppendByteArray(tmp,
+                    (byte) CheckRange(0, 255, samples), (byte) CheckRange(0, 255, channel));
+            tmp   = AppendByteArray(tmp, (byte) ((int) format | (int) codec));
+            tmp   = AppendByteArray(tmp, TrimArray(ToByteArray(streamName), 16));
+            Bytes = AppendByteArray(tmp, IntToByteArray(frame, 4));
         }
 
         public VbanPacketHead(
