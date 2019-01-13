@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 
 namespace Vban
@@ -42,7 +43,7 @@ namespace Vban
 
         public static byte[] IntToByteArray(int integer, int size)
         {
-            return TrimArray(BitConverter.GetBytes(size), size);
+            return TrimArray(BitConverter.GetBytes(integer), size).Reverse().ToArray();
         }
 
         public static byte[] GetBytes(object o)
