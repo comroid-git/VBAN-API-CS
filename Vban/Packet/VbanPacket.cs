@@ -66,7 +66,9 @@ namespace Vban.Packet
 
             public VbanPacket Create(byte[] withData)
             {
-                return new VbanPacket(_headFactory.Create(), withData);
+                VbanPacket packet = Create();
+                packet.AddData(withData);
+                return packet;
             }
 
             public class Builder : IBuilder<Factory>
