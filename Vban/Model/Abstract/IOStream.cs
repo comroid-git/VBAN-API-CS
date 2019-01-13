@@ -71,6 +71,11 @@ namespace Vban.Model.Abstract
             foreach (byte b in buffer) WriteByte(b);
         }
 
+        public void Write(char[] buffer)
+        {
+            foreach (char c in buffer) WriteByte((byte) c);
+        }
+
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new NotImplementedException();
