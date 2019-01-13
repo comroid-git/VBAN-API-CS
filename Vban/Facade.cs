@@ -8,11 +8,28 @@ using static Vban.Util;
 namespace Vban
 {
     // ReSharper disable once InconsistentNaming
-    public class VBAN<T> : IOStream
+    public static class VBAN
+    {
+        public static VBANStream<string> OpenTextStream(int? port)
+        {
+            return OpenTextStream(IPAddress.Loopback, port);
+        }
+
+        public static VBANStream<string> OpenTextStream(IPAddress ipAddress, int? port)
+        {
+            return new VBANStream<string>(
+                    DefaultTextFactory(),
+                    ipAddress,
+                    port);
+        }
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public class VBANStream<T> : IOStream
     {
         public static int DefaultPort = 6980;
 
-        private VBAN(Factory packetFactory, IPAddress ipAddress, int? port)
+        internal VBANStream(Factory packetFactory, IPAddress ipAddress, int? port)
                 : base(false, true, false, false, null, null)
         {
             Closed = false;
@@ -44,19 +61,6 @@ namespace Vban
             byte[] bytes = _packetFactory.Create(_buf).Bytes;
             _client.Send(bytes, bytes.Length, IpEndPoint);
             _buf = new byte[0];
-        }
-
-        public static VBAN<string> OpenTextStream(int? port)
-        {
-            return OpenTextStream(IPAddress.Loopback, port);
-        }
-
-        public static VBAN<string> OpenTextStream(IPAddress ipAddress, int? port)
-        {
-            return new VBAN<string>(
-                    DefaultTextFactory(),
-                    ipAddress,
-                    port);
         }
 
         #region Fields
