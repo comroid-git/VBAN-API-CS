@@ -10,6 +10,8 @@ namespace Vban
     // ReSharper disable once InconsistentNaming
     public static class VBAN
     {
+        public static int DefaultPort = 6980;
+
         public static VBANStream<string> OpenTextStream(int? port)
         {
             return OpenTextStream(IPAddress.Loopback, port);
@@ -27,15 +29,13 @@ namespace Vban
     // ReSharper disable once InconsistentNaming
     public class VBANStream<T> : IOStream
     {
-        public static int DefaultPort = 6980;
-
         internal VBANStream(Factory packetFactory, IPAddress ipAddress, int? port)
                 : base(false, true, false, false, null, null)
         {
             Closed = false;
 
             _packetFactory = packetFactory;
-            IpEndPoint     = new IPEndPoint(ipAddress, port ?? DefaultPort);
+            IpEndPoint     = new IPEndPoint(ipAddress, port ?? VBAN.DefaultPort);
 
             _client = new UdpClient();
         }
