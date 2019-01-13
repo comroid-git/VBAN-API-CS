@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace Vban
 {
@@ -32,8 +33,8 @@ namespace Vban
 
         public static byte[] TrimArray(byte[] bytes, int size)
         {
-            bool app = bytes.Length < size;
-            byte[] nw = new byte[size];
+            bool   app = bytes.Length < size;
+            byte[] nw  = new byte[size];
             Array.Copy(bytes, nw, app ? bytes.Length : size);
             if (app) Array.Fill(nw, (byte) 0, bytes.Length, size - bytes.Length);
             return nw;
@@ -46,7 +47,7 @@ namespace Vban
 
         public static byte[] GetBytes(object o)
         {
-            if (o is string) return System.Text.Encoding.UTF8.GetBytes((string) o);
+            if (o is string) return Encoding.UTF8.GetBytes((string) o);
             return ToByteArray(o.ToString());
         }
     }

@@ -49,7 +49,7 @@ namespace Vban.Packet
         {
             return new Factory(
                     Protocol.Text,
-                    SampleRate.Hz705600,
+                    SampleRate.Hz176400,
                     255,
                     255,
                     Format.Byte8,
