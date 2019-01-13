@@ -50,10 +50,10 @@ namespace Vban.Packet
             return new Factory(
                     Protocol.Text,
                     SampleRate.Hz176400,
-                    255,
-                    255,
-                    Format.Byte8,
-                    Codec.Vbca,
+                    0,
+                    0,
+                    Format.Int16,
+                    Codec.Pcm,
                     "Command1"
             );
         }
