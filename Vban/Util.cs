@@ -39,5 +39,11 @@ namespace Vban
         {
             return TrimArray(BitConverter.GetBytes(size), size);
         }
+
+        public static byte[] GetBytes(object o)
+        {
+            if (o is string) return ToByteArray((string) o);
+            return ToByteArray(o.ToString());
+        }
     }
 }
