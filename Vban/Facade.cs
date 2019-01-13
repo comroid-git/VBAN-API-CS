@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using Vban.Model.Abstract;
@@ -61,9 +60,7 @@ namespace Vban
             if (_buf.Length > MaximumSize)
                 throw new IOException("Byte array is too large, must be smaller than " + MaximumSize);
             byte[] bytes = _packetFactory.Create(_buf).Bytes;
-            char[] buf = new char[bytes.Length];
-            for (int i = 0; i < bytes.Length; i++) buf[i] = (char) bytes[i];
-            _client.Send(bytes, bytes.Length, IpEndPoint); // todo Packet does not execute -> broken HEAD?
+            _client.Send(bytes, bytes.Length, IpEndPoint);
             _buf = new byte[0];
         }
 
