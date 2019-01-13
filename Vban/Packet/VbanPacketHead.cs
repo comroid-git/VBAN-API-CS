@@ -53,7 +53,7 @@ namespace Vban.Packet
                     255,
                     255,
                     Format.Byte8,
-                    Codec.Pcm,
+                    Codec.Vbca,
                     "Command1"
             );
         }

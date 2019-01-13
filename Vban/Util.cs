@@ -46,7 +46,7 @@ namespace Vban
 
         public static byte[] GetBytes(object o)
         {
-            if (o is string) return ToByteArray((string) o);
+            if (o is string) return System.Text.Encoding.UTF8.GetBytes((string) o);
             return ToByteArray(o.ToString());
         }
     }
