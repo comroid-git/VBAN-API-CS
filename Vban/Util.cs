@@ -6,50 +6,38 @@ namespace Vban
 {
     public class Util
     {
-        public static byte[] AppendByteArray(byte[] src, params byte[] trg)
+        public static byte[] SubArray(byte[] src, int iLow, int iHigh)
         {
-            int    tl = src.Length + trg.Length;
-            byte[] nw = new byte[tl];
-            Array.Copy(src, nw, src.Length);
-            Array.Copy(trg, 0,  nw, src.Length, trg.Length);
-            return nw;
-        }
+            var bytes = new byte[iHigh - iLow];
 
-        public static int CheckRange(int from, int to, int check)
-        {
-            if (check < from || check > to)
-                throw new ArgumentOutOfRangeException(
-                        string.Format("Integer out of range. [%d;%d;%d]", from, check, to));
-            return check;
-        }
+            Array.Copy(src, iLow, bytes, 0, bytes.Length);
 
-        public static byte[] ToByteArray(string txt)
-        {
-            byte[] bytes = new byte[txt.Length];
-            char[] chars = txt.ToCharArray();
-            for (int i = 0; i < chars.Length; i++)
-                bytes[i] = (byte) chars[i];
             return bytes;
         }
 
-        public static byte[] TrimArray(byte[] bytes, int size)
+        public static void CheckRange(int check, int from, int to)
         {
-            bool   app = bytes.Length < size;
-            byte[] nw  = new byte[size];
-            Array.Copy(bytes, nw, app ? bytes.Length : size);
-            if (app) Array.Fill(nw, (byte) 0, bytes.Length, size - bytes.Length);
-            return nw;
+            if (check < from || check > to)
+                throw new InvalidOperationException($"Integer out of range. [{from};{check};{to}]");
         }
 
-        public static byte[] IntToByteArray(int integer, int size)
+        public static byte[] TrimArray(byte[] src, int size)
         {
-            return TrimArray(BitConverter.GetBytes(integer), size).Reverse().ToArray();
+            var bytes = new byte[size];
+            Array.Copy(src, bytes, src.Length);
+            return bytes;
         }
 
-        public static byte[] GetBytes(object o)
+        public static byte[] IntToByteArray(int integer)
         {
-            if (o is string) return Encoding.UTF8.GetBytes((string) o);
-            return ToByteArray(o.ToString());
+            // ReSharper disable once RedundantCast
+            return BitConverter.GetBytes((Int32) integer);
+        }
+
+        public static string BytesToString(byte[] bytes, Encoding encoding)
+        {
+            return bytes.TakeWhile(b => b != 0)
+                .Aggregate("", (current, b) => current + encoding.GetChars(new[] {b}));
         }
     }
 }
