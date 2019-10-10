@@ -29,7 +29,7 @@ namespace Vban
     // ReSharper disable once InconsistentNaming
     public class VBANStream<T> : IOStream
     {
-        internal VBANStream(Factory packetFactory, IPAddress ipAddress, int? port)
+        public VBANStream(Factory packetFactory, IPAddress ipAddress, int? port)
                 : base(false, true, false, false, null, null)
         {
             Closed = false;
