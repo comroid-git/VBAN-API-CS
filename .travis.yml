@@ -1,0 +1,8 @@
+language: csharp
+solution: VBAN-API-CS.sln
+mono:
+  - latest
+  - 3.12.0
+dotnet: 2.1.502
+script:
+  - dotnet restore

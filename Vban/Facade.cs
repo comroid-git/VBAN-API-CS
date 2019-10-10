@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -15,6 +16,8 @@ namespace Vban
     // ReSharper disable once ClassNeverInstantiated.Global
     public class VBAN
     {
+        public const int DefaultPort = 6980;
+
         private VBAN()
         {
         }
@@ -50,6 +53,19 @@ namespace Vban
             public bool IsText => Value == 0x40;
 
             public bool IsService => Value == 0x60;
+
+            public override bool Equals(object obj)
+            {
+                if (obj is AnyProtocol protocol)
+                    return protocol.Value == Value;
+
+                return false;
+            }
+
+            public override string ToString()
+            {
+                return $"{Name}-Protocol({Convert.ToString(Value, 16)})";
+            }
         }
 
         public sealed class Protocol<T> : AnyProtocol, IBindable<T>, IIntEnum
@@ -76,19 +92,6 @@ namespace Vban
             internal T CreateDataObject(byte[] bytes)
             {
                 return _mapper.Invoke(bytes);
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (obj is Protocol<T> protocol)
-                    return protocol.Value == Value;
-
-                return false;
-            }
-
-            public override string ToString()
-            {
-                return $"{Name}-Protocol({Convert.ToString(Value, 16)})";
             }
 
             public static AnyProtocol ByValue(int value)
@@ -239,13 +242,17 @@ namespace Vban
             }
         }
 
-        public sealed class CommandFormat : IFormatValue<string>
+        public class AnyFormat
         {
-            public static readonly CommandFormat Ascii = new CommandFormat(0x00);
-            public static readonly CommandFormat Utf8 = new CommandFormat(0x10);
-            public static readonly CommandFormat Wchar = new CommandFormat(0x20);
+        }
 
-            private static readonly CommandFormat[] Values = new CommandFormat[3];
+        public sealed class CommandFormat<TE> : AnyFormat, IFormatValue<TE> where TE : IEnumerable<char>
+        {
+            public static readonly CommandFormat<TE> Ascii = new CommandFormat<TE>(0x00);
+            public static readonly CommandFormat<TE> Utf8 = new CommandFormat<TE>(0x10);
+            public static readonly CommandFormat<TE> Wchar = new CommandFormat<TE>(0x20);
+
+            private static readonly CommandFormat<TE>[] Values = new CommandFormat<TE>[3];
             private static volatile int _vi;
 
             private CommandFormat(int value)
@@ -257,7 +264,7 @@ namespace Vban
 
             public int Value { get; }
 
-            public static CommandFormat ByValue(int value)
+            public static AnyFormat ByValue(int value)
             {
                 foreach (var that in Values)
                     if (that.Value == value)
@@ -268,11 +275,11 @@ namespace Vban
             }
         }
 
-        public sealed class Format : IFormatValue<IEnumerable<char>>
+        public sealed class Format<TE> : AnyFormat, IFormatValue<TE> where TE : IByteArray
         {
-            public static readonly Format Byte8 = new Format(0x00);
+            public static readonly Format<TE> Byte8 = new Format<TE>(0x00);
 
-            private static readonly Format[] Values = new Format[1];
+            private static readonly Format<TE>[] Values = new Format<TE>[1];
             private static volatile int _vi;
 
             private Format(int value)
@@ -284,7 +291,7 @@ namespace Vban
 
             public int Value { get; }
 
-            public static Format ByValue(int value)
+            public static AnyFormat ByValue(int value)
             {
                 foreach (var that in Values)
                     if (that.Value == value)

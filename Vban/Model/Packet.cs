@@ -71,6 +71,8 @@ namespace Vban.Model
             )
             {
             }
+
+            public new VBANPacketHead<T>.Decoded Head => (VBANPacketHead<T>.Decoded) base.Head;
         }
 
         public class Factory<T, TS> : IFactory<VBANPacket<T>> where T : TS

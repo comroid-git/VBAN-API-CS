@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Vban.Model;
 
 namespace Vban
 {
@@ -38,6 +41,18 @@ namespace Vban
         {
             return bytes.TakeWhile(b => b != 0)
                 .Aggregate("", (current, b) => current + encoding.GetChars(new[] {b}));
+        }
+
+        public static byte[] CreateByteArray<T>(T data)
+        {
+            // Must support types: IEnumerable<char>, IByteArray
+
+            if (data is IEnumerable<char> seq)
+                return Encoding.UTF8.GetBytes(seq.ToString());
+            if (data is IByteArray byteArray)
+                return byteArray.Bytes;
+
+            throw new InvalidOperationException("Unknown Data Type! Please contact the developer.");
         }
     }
 }

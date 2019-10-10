@@ -31,10 +31,10 @@ namespace Vban.Model
     {
         private readonly bool _fixedSize;
 
-        public UnfinishedByteArray(int initSize, bool? fixedSize = false)
+        public UnfinishedByteArray(int initSize, bool fixedSize = false)
         {
             BufferArray = new byte[initSize];
-            _fixedSize = fixedSize ?? false;
+            _fixedSize = fixedSize;
         }
 
         public int Length { get; private set; }
