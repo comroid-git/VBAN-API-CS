@@ -15,21 +15,22 @@ namespace Vban.Model
         public const int MaxSize = 1436;
         public static readonly int MaxSizeWithoutHead = MaxSize - VBANPacketHead<T>.Size;
 
-        protected readonly UnfinishedByteArray UnfinishedByteArray;
+        private readonly UnfinishedByteArray _unfinishedByteArray;
         private bool _hasData;
 
         internal VBANPacket(VBANPacketHead<T> head)
         {
             Head = head;
-            UnfinishedByteArray = new UnfinishedByteArray(MaxSize, true);
+            _unfinishedByteArray = new UnfinishedByteArray(MaxSize, true);
+            _unfinishedByteArray.Append(head.Bytes);
         }
 
         public VBANPacket(VBANPacketHead<T> head, byte[] data)
         {
             Head = head;
-            UnfinishedByteArray = new UnfinishedByteArray(MaxSize);
+            _unfinishedByteArray = new UnfinishedByteArray(MaxSize);
 
-            UnfinishedByteArray.Append(head.Bytes);
+            _unfinishedByteArray.Append(head.Bytes);
             AttachData(data);
         }
 
@@ -49,7 +50,7 @@ namespace Vban.Model
 
         public static implicit operator byte[](VBANPacket<T> packet)
         {
-            return packet.UnfinishedByteArray.Bytes;
+            return packet._unfinishedByteArray.Bytes;
         }
 
         private void AttachData(byte[] data)
@@ -58,7 +59,7 @@ namespace Vban.Model
                 throw new InvalidOperationException(
                     "Data is too large to be sent, must be smaller than " + MaxSize);
 
-            UnfinishedByteArray.Append(data);
+            _unfinishedByteArray.Append(data);
 
             _hasData = true;
         }
