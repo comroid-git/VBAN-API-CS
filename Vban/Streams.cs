@@ -11,6 +11,19 @@ namespace Vban
 {
     public abstract class VBANStreamBase : Stream
     {
+        private protected UdpClient _client;
+
+        protected byte[] Buf = new byte[0];
+        protected int BufI;
+
+        protected VBANStreamBase(bool canRead, bool canWrite)
+        {
+            CanRead = canRead;
+            CanWrite = canWrite;
+
+            Length = 0;
+        }
+
         public IPEndPoint IpEndPoint { get; private protected set; }
         public IPAddress IpAddress => IpEndPoint.Address;
         public int Port => IpEndPoint.Port;
@@ -20,19 +33,6 @@ namespace Vban
         public override bool CanWrite { get; }
         public override long Length { get; }
         public override long Position { get; set; }
-
-        protected byte[] Buf = new byte[0];
-        protected int BufI;
-
-        private protected UdpClient _client;
-
-        protected VBANStreamBase(bool canRead, bool canWrite)
-        {
-            CanRead = canRead;
-            CanWrite = canWrite;
-
-            Length = 0;
-        }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
@@ -58,10 +58,7 @@ namespace Vban
 
     public class VBANInputStreamBase<T> : VBANStreamBase
     {
-        public VBAN.Protocol<T> ExpectedProtocol { get; }
-
-        public VBANInputStreamBase(
-            VBAN.Protocol<T> expectedProtocol,
+        public VBANInputStreamBase(VBAN.Protocol<T> expectedProtocol,
             IPAddress ipAddress,
             int port = VBAN.DefaultPort)
             : base(true, false)
@@ -71,10 +68,12 @@ namespace Vban
             _client = new UdpClient(IpEndPoint = new IPEndPoint(ipAddress, port));
         }
 
+        public VBAN.Protocol<T> ExpectedProtocol { get; }
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         public T readData()
         {
-            VBANPacket<T>.Decoded packet = readPacket();
+            var packet = readPacket();
             VBAN.AnyProtocol rcvProt;
 
             if (!(rcvProt = packet.Head.Protocol).Equals(ExpectedProtocol))
@@ -87,7 +86,7 @@ namespace Vban
         [MethodImpl(MethodImplOptions.Synchronized)]
         public VBANPacket<T>.Decoded readPacket()
         {
-            byte[] bytes = new byte[VBANPacket<T>.MaxSize];
+            var bytes = new byte[VBANPacket<T>.MaxSize];
 
             int nRead = Read(bytes, 0, bytes.Length);
 
@@ -99,10 +98,10 @@ namespace Vban
         {
             if (Closed) throw new InvalidOperationException("Stream is closed");
 
-            IPEndPoint endPoint = IpEndPoint;
+            var endPoint = IpEndPoint;
 
-            byte[] bytes = new byte[count];
-            int bi = 0;
+            var bytes = new byte[count];
+            var bi = 0;
 
             while (bi < count)
             {
@@ -134,15 +133,11 @@ namespace Vban
 
     public class VBANOutputStream<T> : VBANStreamBase
     {
-        public IFactory<VBANPacket<T>> PacketFactory { get; }
-
-        private protected new UnfinishedByteArray Buf { get; set; }
-
         public VBANOutputStream(
             IFactory<VBANPacket<T>> packetFactory,
             IPAddress address,
             int port = VBAN.DefaultPort
-            ) : base(false, true)
+        ) : base(false, true)
         {
             PacketFactory = packetFactory;
             Buf = new UnfinishedByteArray(VBANPacket<T>.MaxSize, true);
@@ -150,7 +145,11 @@ namespace Vban
             _client = new UdpClient(IpEndPoint = new IPEndPoint(address, port));
         }
 
-        public VBANOutputStream<T> sendData(T data)
+        public IFactory<VBANPacket<T>> PacketFactory { get; }
+
+        private protected new UnfinishedByteArray Buf { get; set; }
+
+        public VBANOutputStream<T> SendData(T data)
         {
             Write(Util.CreateByteArray(data));
             Flush();
@@ -159,16 +158,16 @@ namespace Vban
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            byte[] actual = new byte[count];
+            var actual = new byte[count];
             Array.Copy(buffer, offset, actual, 0, count);
 
-            int wInd = 0;
+            var wInd = 0;
 
             while (wInd < actual.Length)
             {
                 byte b = buffer[wInd++];
 
-                if ((char) b == '\n') Flush();
+                if ((char)b == '\n') Flush();
                 else Buf.Append(b);
 
                 if (wInd != 0 && wInd % VBANPacket<T>.MaxSizeWithoutHead == 0)
@@ -181,9 +180,10 @@ namespace Vban
             if (Closed) throw new InvalidOperationException("Stream is closed");
 
             if (Buf.Length > VBANPacket<T>.MaxSize)
-                throw new InvalidOperationException($"Buffer is too large, must be smaller than {VBANPacket<T>.MaxSize}");
+                throw new InvalidOperationException(
+                    $"Buffer is too large, must be smaller than {VBANPacket<T>.MaxSize}");
 
-            VBANPacket<T> packet = PacketFactory.Create();
+            var packet = PacketFactory.Create();
             packet.Data = Buf.Bytes;
 
             byte[] x;

@@ -7,15 +7,15 @@ namespace Vban.Tests
     [TestFixture]
     public class UtilsTest
     {
-        private UnfinishedByteArray _array;
-
         [SetUp]
         public void Setup()
         {
             _array = new UnfinishedByteArray(2);
 
-            _array.Append( 32, 41);
+            _array.Append(32, 41);
         }
+
+        private UnfinishedByteArray _array;
 
         [Test]
         public void TestAppending()
@@ -28,7 +28,7 @@ namespace Vban.Tests
             Assert.AreEqual(4, _array.Length);
             Assert.AreEqual(6, _array.BufferSize);
 
-            Assert.AreEqual(new byte[]{32, 41, 24, 64}, _array.Bytes);
+            Assert.AreEqual(new byte[] { 32, 41, 24, 64 }, _array.Bytes);
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace Vban.Tests
         [Test]
         public void TestFixedSize()
         {
-            UnfinishedByteArray fixedSize = new UnfinishedByteArray(2, true);
+            var fixedSize = new UnfinishedByteArray(2, true);
 
             fixedSize.Append(72, 19);
 

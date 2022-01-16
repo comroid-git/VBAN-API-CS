@@ -1,5 +1,7 @@
 // ReSharper disable UnusedTypeParameter
 
+using System;
+
 namespace Vban.Model
 {
     public interface IBindable<T>
@@ -11,9 +13,10 @@ namespace Vban.Model
         T Build();
     }
 
+    [Obsolete]
     public interface IByteArray
     {
-        byte[] Bytes { get; }
+        [Obsolete] byte[] Bytes { get; }
     }
 
     public interface IFactory<out T>

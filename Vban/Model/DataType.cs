@@ -6,16 +6,23 @@ namespace Vban.Model
 {
     public class AudioFrame : IByteArray
     {
+        private readonly byte[] _bytes;
+
         private AudioFrame(byte[] bytes)
         {
-            Bytes = bytes;
+            _bytes = bytes;
         }
 
-        public byte[] Bytes { get; }
+        public byte[] Bytes => this;
 
         public static AudioFrame FromBytes(byte[] bytes)
         {
             return new AudioFrame(bytes);
+        }
+
+        public static implicit operator byte[](AudioFrame frame)
+        {
+            return frame._bytes;
         }
     }
 

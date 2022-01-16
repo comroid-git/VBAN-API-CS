@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Vban.Model;
@@ -17,7 +16,7 @@ namespace Vban.Tests
                 .CreateBuilder(VBAN.Protocol<string>.Text);
 
             builder.SampleRate = VBAN.BitsPerSecond.Bps150;
-            builder.Format = VBAN.CommandFormat<string>.Utf8;
+            builder.Format = VBAN.CommandFormat.Utf8;
         }
     }
 }

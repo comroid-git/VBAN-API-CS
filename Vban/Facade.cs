@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -70,16 +69,13 @@ namespace Vban
 
         public sealed class Protocol<T> : AnyProtocol, IBindable<T>, IIntEnum
         {
-            public static readonly Protocol<AudioFrame> Audio =
-                new Protocol<AudioFrame>(0x00, AudioFrame.FromBytes);
+            public static readonly Protocol<AudioFrame> Audio = new(0x00, AudioFrame.FromBytes);
 
-            public static readonly Protocol<MIDICommand> Serial =
-                new Protocol<MIDICommand>(0x20, MIDICommand.FromBytes);
+            public static readonly Protocol<MIDICommand> Serial = new(0x20, MIDICommand.FromBytes);
 
-            public static readonly Protocol<string> Text =
-                new Protocol<string>(0x40, Encoding.ASCII.GetString);
+            public static readonly Protocol<string> Text = new(0x40, Encoding.ASCII.GetString);
 
-            public static readonly Protocol<byte[]> Service = new Protocol<byte[]>(0x60, x => x);
+            public static readonly Protocol<byte[]> Service = new(0x60, x => x);
 
             private readonly Func<byte[], T> _mapper;
 
@@ -125,29 +121,29 @@ namespace Vban
 
         public sealed class SampleRate : IDataRateValue<AudioFrame>
         {
-            public static readonly SampleRate Hz6000 = new SampleRate(0);
-            public static readonly SampleRate Hz12000 = new SampleRate(1);
-            public static readonly SampleRate Hz24000 = new SampleRate(2);
-            public static readonly SampleRate Hz48000 = new SampleRate(3);
-            public static readonly SampleRate Hz96000 = new SampleRate(4);
-            public static readonly SampleRate Hz192000 = new SampleRate(5);
-            public static readonly SampleRate Hz384000 = new SampleRate(6);
+            public static readonly SampleRate Hz6000 = new(0);
+            public static readonly SampleRate Hz12000 = new(1);
+            public static readonly SampleRate Hz24000 = new(2);
+            public static readonly SampleRate Hz48000 = new(3);
+            public static readonly SampleRate Hz96000 = new(4);
+            public static readonly SampleRate Hz192000 = new(5);
+            public static readonly SampleRate Hz384000 = new(6);
 
-            public static readonly SampleRate Hz8000 = new SampleRate(7);
-            public static readonly SampleRate Hz16000 = new SampleRate(8);
-            public static readonly SampleRate Hz32000 = new SampleRate(9);
-            public static readonly SampleRate Hz64000 = new SampleRate(10);
-            public static readonly SampleRate Hz128000 = new SampleRate(11);
-            public static readonly SampleRate Hz256000 = new SampleRate(12);
-            public static readonly SampleRate Hz512000 = new SampleRate(13);
+            public static readonly SampleRate Hz8000 = new(7);
+            public static readonly SampleRate Hz16000 = new(8);
+            public static readonly SampleRate Hz32000 = new(9);
+            public static readonly SampleRate Hz64000 = new(10);
+            public static readonly SampleRate Hz128000 = new(11);
+            public static readonly SampleRate Hz256000 = new(12);
+            public static readonly SampleRate Hz512000 = new(13);
 
-            public static readonly SampleRate Hz11025 = new SampleRate(14);
-            public static readonly SampleRate Hz22050 = new SampleRate(15);
-            public static readonly SampleRate Hz44100 = new SampleRate(16);
-            public static readonly SampleRate Hz88200 = new SampleRate(17);
-            public static readonly SampleRate Hz176400 = new SampleRate(18);
-            public static readonly SampleRate Hz352800 = new SampleRate(19);
-            public static readonly SampleRate Hz705600 = new SampleRate(20);
+            public static readonly SampleRate Hz11025 = new(14);
+            public static readonly SampleRate Hz22050 = new(15);
+            public static readonly SampleRate Hz44100 = new(16);
+            public static readonly SampleRate Hz88200 = new(17);
+            public static readonly SampleRate Hz176400 = new(18);
+            public static readonly SampleRate Hz352800 = new(19);
+            public static readonly SampleRate Hz705600 = new(20);
 
             private static readonly SampleRate[] Values = new SampleRate[21];
 
@@ -168,34 +164,34 @@ namespace Vban
 
         public sealed class BitsPerSecond : IDataRateValue<IEnumerable<char>>
         {
-            public static readonly BitsPerSecond Bps0 = new BitsPerSecond(0);
-            public static readonly BitsPerSecond Bps110 = new BitsPerSecond(1);
-            public static readonly BitsPerSecond Bps150 = new BitsPerSecond(2);
-            public static readonly BitsPerSecond Bps300 = new BitsPerSecond(3);
-            public static readonly BitsPerSecond Bps600 = new BitsPerSecond(4);
-            public static readonly BitsPerSecond Bps1200 = new BitsPerSecond(5);
-            public static readonly BitsPerSecond Bps2400 = new BitsPerSecond(6);
+            public static readonly BitsPerSecond Bps0 = new(0);
+            public static readonly BitsPerSecond Bps110 = new(1);
+            public static readonly BitsPerSecond Bps150 = new(2);
+            public static readonly BitsPerSecond Bps300 = new(3);
+            public static readonly BitsPerSecond Bps600 = new(4);
+            public static readonly BitsPerSecond Bps1200 = new(5);
+            public static readonly BitsPerSecond Bps2400 = new(6);
 
-            public static readonly BitsPerSecond Bps4800 = new BitsPerSecond(7);
-            public static readonly BitsPerSecond Bps9600 = new BitsPerSecond(8);
-            public static readonly BitsPerSecond Bps14400 = new BitsPerSecond(9);
-            public static readonly BitsPerSecond Bps19200 = new BitsPerSecond(10);
-            public static readonly BitsPerSecond Bps31250 = new BitsPerSecond(11);
-            public static readonly BitsPerSecond Bps38400 = new BitsPerSecond(12);
-            public static readonly BitsPerSecond Bps57600 = new BitsPerSecond(13);
+            public static readonly BitsPerSecond Bps4800 = new(7);
+            public static readonly BitsPerSecond Bps9600 = new(8);
+            public static readonly BitsPerSecond Bps14400 = new(9);
+            public static readonly BitsPerSecond Bps19200 = new(10);
+            public static readonly BitsPerSecond Bps31250 = new(11);
+            public static readonly BitsPerSecond Bps38400 = new(12);
+            public static readonly BitsPerSecond Bps57600 = new(13);
 
-            public static readonly BitsPerSecond Bps115200 = new BitsPerSecond(14);
-            public static readonly BitsPerSecond Bps128000 = new BitsPerSecond(15);
-            public static readonly BitsPerSecond Bps230400 = new BitsPerSecond(16);
-            public static readonly BitsPerSecond Bps250000 = new BitsPerSecond(17);
-            public static readonly BitsPerSecond Bps256000 = new BitsPerSecond(18);
-            public static readonly BitsPerSecond Bps460800 = new BitsPerSecond(19);
-            public static readonly BitsPerSecond Bps921600 = new BitsPerSecond(20);
+            public static readonly BitsPerSecond Bps115200 = new(14);
+            public static readonly BitsPerSecond Bps128000 = new(15);
+            public static readonly BitsPerSecond Bps230400 = new(16);
+            public static readonly BitsPerSecond Bps250000 = new(17);
+            public static readonly BitsPerSecond Bps256000 = new(18);
+            public static readonly BitsPerSecond Bps460800 = new(19);
+            public static readonly BitsPerSecond Bps921600 = new(20);
 
-            public static readonly BitsPerSecond Bps1000000 = new BitsPerSecond(21);
-            public static readonly BitsPerSecond Bps1500000 = new BitsPerSecond(22);
-            public static readonly BitsPerSecond Bps2000000 = new BitsPerSecond(23);
-            public static readonly BitsPerSecond Bps3000000 = new BitsPerSecond(24);
+            public static readonly BitsPerSecond Bps1000000 = new(21);
+            public static readonly BitsPerSecond Bps1500000 = new(22);
+            public static readonly BitsPerSecond Bps2000000 = new(23);
+            public static readonly BitsPerSecond Bps3000000 = new(24);
 
             private static readonly BitsPerSecond[] Values = new BitsPerSecond[25];
 
@@ -216,14 +212,14 @@ namespace Vban
 
         public sealed class AudioFormat : IFormatValue<AudioFrame>
         {
-            public static readonly AudioFormat Byte8 = new AudioFormat(0x00);
-            public static readonly AudioFormat Int16 = new AudioFormat(0x01);
-            public static readonly AudioFormat Int24 = new AudioFormat(0x02);
-            public static readonly AudioFormat Int32 = new AudioFormat(0x03);
-            public static readonly AudioFormat Float32 = new AudioFormat(0x04);
-            public static readonly AudioFormat Float64 = new AudioFormat(0x05);
-            public static readonly AudioFormat Bits12 = new AudioFormat(0x06);
-            public static readonly AudioFormat Bits10 = new AudioFormat(0x07);
+            public static readonly AudioFormat Byte8 = new(0x00);
+            public static readonly AudioFormat Int16 = new(0x01);
+            public static readonly AudioFormat Int24 = new(0x02);
+            public static readonly AudioFormat Int32 = new(0x03);
+            public static readonly AudioFormat Float32 = new(0x04);
+            public static readonly AudioFormat Float64 = new(0x05);
+            public static readonly AudioFormat Bits12 = new(0x06);
+            public static readonly AudioFormat Bits10 = new(0x07);
 
             private static readonly AudioFormat[] Values = new AudioFormat[8];
 
@@ -246,13 +242,13 @@ namespace Vban
         {
         }
 
-        public sealed class CommandFormat<TE> : AnyFormat, IFormatValue<TE> where TE : IEnumerable<char>
+        public sealed class CommandFormat : AnyFormat, IFormatValue<IEnumerable<char>>
         {
-            public static readonly CommandFormat<TE> Ascii = new CommandFormat<TE>(0x00);
-            public static readonly CommandFormat<TE> Utf8 = new CommandFormat<TE>(0x10);
-            public static readonly CommandFormat<TE> Wchar = new CommandFormat<TE>(0x20);
+            public static readonly CommandFormat Ascii = new(0x00);
+            public static readonly CommandFormat Utf8 = new(0x10);
+            public static readonly CommandFormat Wchar = new(0x20);
 
-            private static readonly CommandFormat<TE>[] Values = new CommandFormat<TE>[3];
+            private static readonly CommandFormat[] Values = new CommandFormat[3];
             private static volatile int _vi;
 
             private CommandFormat(int value)
@@ -264,7 +260,7 @@ namespace Vban
 
             public int Value { get; }
 
-            public static AnyFormat ByValue(int value)
+            public static AnyFormatValue ByValue(int value)
             {
                 foreach (var that in Values)
                     if (that.Value == value)
@@ -275,11 +271,11 @@ namespace Vban
             }
         }
 
-        public sealed class Format<TE> : AnyFormat, IFormatValue<TE> where TE : IByteArray
+        public sealed class Format : AnyFormat, IFormatValue<IByteArray>
         {
-            public static readonly Format<TE> Byte8 = new Format<TE>(0x00);
+            public static readonly Format Byte8 = new(0x00);
 
-            private static readonly Format<TE>[] Values = new Format<TE>[1];
+            private static readonly Format[] Values = new Format[1];
             private static volatile int _vi;
 
             private Format(int value)
@@ -291,7 +287,7 @@ namespace Vban
 
             public int Value { get; }
 
-            public static AnyFormat ByValue(int value)
+            public static AnyFormatValue ByValue(int value)
             {
                 foreach (var that in Values)
                     if (that.Value == value)

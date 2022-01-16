@@ -45,7 +45,12 @@ namespace Vban.Model
             }
         }
 
-        public byte[] Bytes => UnfinishedByteArray.Bytes;
+        public byte[] Bytes => this;
+
+        public static implicit operator byte[](VBANPacket<T> packet)
+        {
+            return packet.UnfinishedByteArray.Bytes;
+        }
 
         private void AttachData(byte[] data)
         {
@@ -72,7 +77,7 @@ namespace Vban.Model
             {
             }
 
-            public new VBANPacketHead<T>.Decoded Head => (VBANPacketHead<T>.Decoded) base.Head;
+            public new VBANPacketHead<T>.Decoded Head => (VBANPacketHead<T>.Decoded)base.Head;
         }
 
         public class Factory<T, TS> : IFactory<VBANPacket<T>> where T : TS
@@ -160,14 +165,19 @@ namespace Vban.Model
             _unfinishedByteArray = new UnfinishedByteArray(Size, true);
 
             _unfinishedByteArray.Append(Encoding.ASCII.GetBytes("VBAN"));
-            _unfinishedByteArray.Append((byte) (protocol | sampleRateIndex));
-            _unfinishedByteArray.Append((byte) samples, (byte) channel);
-            _unfinishedByteArray.Append((byte) (format | codec));
+            _unfinishedByteArray.Append((byte)(protocol | sampleRateIndex));
+            _unfinishedByteArray.Append((byte)samples, (byte)channel);
+            _unfinishedByteArray.Append((byte)(format | codec));
             _unfinishedByteArray.Append(Util.TrimArray(Encoding.ASCII.GetBytes(streamName), 16));
             _unfinishedByteArray.Append(BitConverter.GetBytes(frameCounter));
         }
 
-        public byte[] Bytes => _unfinishedByteArray.Bytes;
+        public byte[] Bytes => this;
+
+        public static implicit operator byte[](VBANPacketHead<T> packet)
+        {
+            return packet._unfinishedByteArray.Bytes;
+        }
 
         public static Factory<T, TS> DefaultFactory<T, TS>(VBAN.Protocol<T> forProtocol)
             where T : TS
@@ -194,14 +204,14 @@ namespace Vban.Model
                         "Invalid packet head: First bytes must be 'VBAN' [rcv='"
                         + Encoding.ASCII.GetString(Util.SubArray(bytes, 0, 4)) + "']");
 
-                var protocolInt = bytes[4] & 0b11111000;
+                int protocolInt = bytes[4] & 0b11111000;
                 Protocol = VBAN.Protocol<T>.ByValue(protocolInt);
 
                 // throw exception if protocol is SERVICE
                 if (Protocol.IsService)
                     throw new InvalidOperationException("Service Subprotocol is not supported!");
 
-                var dataRateInt = bytes[4] & 0b00000111;
+                int dataRateInt = bytes[4] & 0b00000111;
                 switch (Protocol.Value)
                 {
                     case 0x00: // AUDIO
@@ -223,7 +233,7 @@ namespace Vban.Model
                 Samples = bytes[5] + 1;
                 Channel = bytes[6] + 1;
 
-                var formatInt = bytes[7] & 0b00011111;
+                int formatInt = bytes[7] & 0b00011111;
                 switch (Protocol.Value)
                 {
                     case 0x00: // AUDIO
@@ -244,9 +254,9 @@ namespace Vban.Model
                 }
 
                 // reserved bit
-                var unused = bytes[7] & 0b11101111;
+                int unused = bytes[7] & 0b11101111;
 
-                var codecInt = bytes[7] & 0b11110000;
+                int codecInt = bytes[7] & 0b11110000;
 
                 switch (codecInt)
                 {

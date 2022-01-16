@@ -43,14 +43,19 @@ namespace Vban.Model
 
         public byte[] BufferArray { get; private set; }
 
-        public byte[] Bytes => Finish();
+        public byte[] Bytes => this;
+
+        public static implicit operator byte[](UnfinishedByteArray arr)
+        {
+            return arr.Finish();
+        }
 
         public void Append(params byte[] bytes)
         {
             if (bytes == null)
                 throw new NullReferenceException("bytearray is null");
 
-            var newSize = Length + bytes.Length;
+            int newSize = Length + bytes.Length;
 
             if (newSize > BufferArray.Length)
             {
@@ -64,7 +69,7 @@ namespace Vban.Model
                 BufferArray = newBuf;
             }
 
-            foreach (var aByte in bytes)
+            foreach (byte aByte in bytes)
                 BufferArray[Length++] = aByte;
         }
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,13 +33,13 @@ namespace Vban
         public static byte[] IntToByteArray(int integer)
         {
             // ReSharper disable once RedundantCast
-            return BitConverter.GetBytes((Int32) integer);
+            return BitConverter.GetBytes((int)integer);
         }
 
         public static string BytesToString(byte[] bytes, Encoding encoding)
         {
             return bytes.TakeWhile(b => b != 0)
-                .Aggregate("", (current, b) => current + encoding.GetChars(new[] {b}));
+                .Aggregate("", (current, b) => current + encoding.GetChars(new[] { b }));
         }
 
         public static byte[] CreateByteArray<T>(T data)
