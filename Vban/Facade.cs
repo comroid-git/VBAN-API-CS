@@ -272,7 +272,7 @@ namespace Vban
             }
         }
 
-        public sealed class Format : AnyFormat, IFormatValue<IByteArray>
+        public sealed class Format : AnyFormat, IFormatValue<ByteArray>
         {
             private static readonly Format[] Values = new Format[1];
             

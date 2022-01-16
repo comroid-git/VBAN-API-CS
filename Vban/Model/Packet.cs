@@ -10,41 +10,30 @@ using System.Text;
 namespace Vban.Model
 {
     // ReSharper disable once InconsistentNaming
-    public class VBANPacket<T> : IByteArray
+    public class VBANPacket<T> : ByteArray
     {
         public const int MaxSize = 1436;
         public static readonly int MaxSizeWithoutHead = MaxSize - VBANPacketHead<T>.Size;
 
-        private readonly UnfinishedByteArray _unfinishedByteArray;
+        private readonly ByteArray _unfinishedByteArray;
         private bool _hasData;
 
         internal VBANPacket(VBANPacketHead<T> head)
         {
             Head = head;
-            _unfinishedByteArray = new UnfinishedByteArray(MaxSize, true);
+            _unfinishedByteArray = new ByteArray();
             _unfinishedByteArray.Append(head.Bytes);
         }
 
         public VBANPacket(VBANPacketHead<T> head, byte[] data)
         {
             Head = head;
-            _unfinishedByteArray = new UnfinishedByteArray(MaxSize);
-
+            _unfinishedByteArray = new ByteArray();
             _unfinishedByteArray.Append(head.Bytes);
             AttachData(data);
         }
 
         public VBANPacketHead<T> Head { get; }
-
-        public byte[] Data
-        {
-            set
-            {
-                if (_hasData)
-                    throw new InvalidOperationException("Packet already has data attached");
-                AttachData(value);
-            }
-        }
 
         public byte[] Bytes => this;
 
@@ -53,14 +42,15 @@ namespace Vban.Model
             return packet._unfinishedByteArray.Bytes;
         }
 
-        private void AttachData(byte[] data)
+        public void AttachData(byte[] data)
         {
             if (data.Length > MaxSize)
                 throw new InvalidOperationException(
                     "Data is too large to be sent, must be smaller than " + MaxSize);
+            if (_hasData)
+                throw new InvalidOperationException("Packet already has data attached");
 
             _unfinishedByteArray.Append(data);
-
             _hasData = true;
         }
 
@@ -125,16 +115,17 @@ namespace Vban.Model
     }
 
     // ReSharper disable once InconsistentNaming
-    public class VBANPacketHead<T> : IByteArray
+    public class VBANPacketHead<T> : ByteArray
     {
         public static readonly int Size = 28;
 
-        private readonly UnfinishedByteArray _unfinishedByteArray;
+        private readonly ByteArray _unfinishedByteArray;
 
         internal VBANPacketHead(byte[] bytes)
         {
-            _unfinishedByteArray = new UnfinishedByteArray(Size);
-            _unfinishedByteArray.Append(bytes);
+            if (bytes.Length != Size)
+                throw new InvalidOperationException($"Invalid Header Data written; writeIndex = {bytes.Length} [ != {Size} ]");
+            _unfinishedByteArray = new ByteArray(false, bytes);
         }
 
         public VBANPacketHead(
@@ -151,14 +142,18 @@ namespace Vban.Model
             Util.CheckRange(samples, 0, 255);
             Util.CheckRange(channel, 0, 255);
 
-            _unfinishedByteArray = new UnfinishedByteArray(Size, true);
+            _unfinishedByteArray = new ByteArray(Size);
 
-            _unfinishedByteArray.Append(Encoding.ASCII.GetBytes("VBAN"));
-            _unfinishedByteArray.Append((byte)(protocol | sampleRateIndex));
-            _unfinishedByteArray.Append((byte)samples, (byte)channel);
-            _unfinishedByteArray.Append((byte)(format | codec));
-            _unfinishedByteArray.Append(Util.TrimArray(Encoding.ASCII.GetBytes(streamName), 16));
-            _unfinishedByteArray.Append(BitConverter.GetBytes(frameCounter));
+            int wi = 0;
+            _unfinishedByteArray.Insert(ref wi /*4*/, Encoding.ASCII.GetBytes("VBAN"));
+            _unfinishedByteArray.Insert(ref wi /*1*/, (byte)(protocol | sampleRateIndex));
+            _unfinishedByteArray.Insert(ref wi /*2*/, (byte)samples, (byte)channel);
+            _unfinishedByteArray.Insert(ref wi /*1*/, (byte)(format | codec));
+            _unfinishedByteArray.Insert(ref wi /*16*/, Util.TrimArray(Encoding.ASCII.GetBytes(streamName), 16));
+            _unfinishedByteArray.Insert(ref wi /*4*/, BitConverter.GetBytes(frameCounter));
+
+            if (wi != Size)
+                throw new InvalidOperationException($"Invalid Header Data written; writeIndex = {wi} [ != {Size} ]");
         }
 
         public byte[] Bytes => this;

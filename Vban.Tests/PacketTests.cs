@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using NUnit.Framework;
 using Vban.Model;
 
@@ -7,6 +8,7 @@ namespace Vban.Tests
     // ReSharper disable once InconsistentNaming
     public class VBANPacketTest
     {
+        
         private VBANPacket<string>.Factory<string, string> _factory;
 
         [SetUp]

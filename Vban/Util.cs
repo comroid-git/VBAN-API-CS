@@ -48,7 +48,7 @@ namespace Vban
 
             if (data is IEnumerable<char> seq)
                 return Encoding.UTF8.GetBytes(seq.ToString());
-            if (data is IByteArray byteArray)
+            if (data is ByteArray byteArray)
                 return byteArray.Bytes;
 
             throw new InvalidOperationException("Unknown Data Type! Please contact the developer.");

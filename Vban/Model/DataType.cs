@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Vban.Model
 {
-    public class AudioFrame : IByteArray
+    public class AudioFrame : ByteArray
     {
         private readonly byte[] _bytes;
 
