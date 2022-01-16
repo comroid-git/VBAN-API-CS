@@ -121,6 +121,8 @@ namespace Vban
 
         public sealed class SampleRate : IDataRateValue<AudioFrame>
         {
+            private static readonly SampleRate[] Values = new SampleRate[21];
+
             public static readonly SampleRate Hz6000 = new(0);
             public static readonly SampleRate Hz12000 = new(1);
             public static readonly SampleRate Hz24000 = new(2);
@@ -145,8 +147,6 @@ namespace Vban
             public static readonly SampleRate Hz352800 = new(19);
             public static readonly SampleRate Hz705600 = new(20);
 
-            private static readonly SampleRate[] Values = new SampleRate[21];
-
             private SampleRate(int value)
             {
                 Value = value;
@@ -164,6 +164,8 @@ namespace Vban
 
         public sealed class BitsPerSecond : IDataRateValue<IEnumerable<char>>
         {
+            private static readonly BitsPerSecond[] Values = new BitsPerSecond[25];
+            
             public static readonly BitsPerSecond Bps0 = new(0);
             public static readonly BitsPerSecond Bps110 = new(1);
             public static readonly BitsPerSecond Bps150 = new(2);
@@ -193,8 +195,6 @@ namespace Vban
             public static readonly BitsPerSecond Bps2000000 = new(23);
             public static readonly BitsPerSecond Bps3000000 = new(24);
 
-            private static readonly BitsPerSecond[] Values = new BitsPerSecond[25];
-
             private BitsPerSecond(int value)
             {
                 Value = value;
@@ -212,6 +212,8 @@ namespace Vban
 
         public sealed class AudioFormat : IFormatValue<AudioFrame>
         {
+            private static readonly AudioFormat[] Values = new AudioFormat[8];
+
             public static readonly AudioFormat Byte8 = new(0x00);
             public static readonly AudioFormat Int16 = new(0x01);
             public static readonly AudioFormat Int24 = new(0x02);
@@ -220,8 +222,6 @@ namespace Vban
             public static readonly AudioFormat Float64 = new(0x05);
             public static readonly AudioFormat Bits12 = new(0x06);
             public static readonly AudioFormat Bits10 = new(0x07);
-
-            private static readonly AudioFormat[] Values = new AudioFormat[8];
 
             private AudioFormat(int value)
             {
@@ -244,12 +244,13 @@ namespace Vban
 
         public sealed class CommandFormat : AnyFormat, IFormatValue<IEnumerable<char>>
         {
+            private static readonly CommandFormat[] Values = new CommandFormat[3];
+            
             public static readonly CommandFormat Ascii = new(0x00);
             public static readonly CommandFormat Utf8 = new(0x10);
             public static readonly CommandFormat Wchar = new(0x20);
 
-            private static readonly CommandFormat[] Values = new CommandFormat[3];
-            private static volatile int _vi;
+            private static int _vi;
 
             private CommandFormat(int value)
             {
@@ -273,10 +274,11 @@ namespace Vban
 
         public sealed class Format : AnyFormat, IFormatValue<IByteArray>
         {
+            private static readonly Format[] Values = new Format[1];
+            
             public static readonly Format Byte8 = new(0x00);
 
-            private static readonly Format[] Values = new Format[1];
-            private static volatile int _vi;
+            private static int _vi;
 
             private Format(int value)
             {

@@ -96,25 +96,17 @@ namespace Vban.Model
                 return new VBANPacket<T>(_headFactory.Create());
             }
 
+            [Obsolete]
             public static Builder<T, TS> CreateBuilder(VBAN.Protocol<T> protocol)
             {
                 return new Builder<T, TS>(protocol);
             }
 
-            public static Factory<T, TS> ProtocolDefault(VBAN.Protocol<T> protocol)
-            {
-                return CreateBuilder(protocol)
-                    .SetDefaultFactory()
-                    .Build();
-            }
-
             public class Builder<T, TS> : IBuilder<Factory<T, TS>> where T : TS
             {
-                internal Builder(VBAN.Protocol<T> protocol)
+                public Builder(VBAN.Protocol<T> protocol)
                 {
                     Protocol = protocol;
-
-                    SetDefaultFactory();
                 }
 
                 public VBAN.Protocol<T> Protocol { get; }
@@ -122,14 +114,10 @@ namespace Vban.Model
 
                 public Factory<T, TS> Build()
                 {
+                    if (HeadFactory == null)
+                        throw new InvalidOperationException("No head factory defined");
+                    
                     return new Factory<T, TS>(HeadFactory);
-                }
-
-                public Builder<T, TS> SetDefaultFactory()
-                {
-                    HeadFactory = VBANPacketHead<T>.DefaultFactory<T, TS>(Protocol);
-
-                    return this;
                 }
             }
         }
@@ -177,12 +165,6 @@ namespace Vban.Model
         public static implicit operator byte[](VBANPacketHead<T> packet)
         {
             return packet._unfinishedByteArray.Bytes;
-        }
-
-        public static Factory<T, TS> DefaultFactory<T, TS>(VBAN.Protocol<T> forProtocol)
-            where T : TS
-        {
-            return Factory<T, TS>.CreateBuilder(forProtocol).Build();
         }
 
         public static VBANPacketHead<object> Decode(byte[] bytes)
@@ -327,6 +309,7 @@ namespace Vban.Model
                     StreamName, Counter++);
             }
 
+            [Obsolete]
             public static Builder<T, TS> CreateBuilder(VBAN.Protocol<T> protocol)
             {
                 return new Builder<T, TS>(protocol);
@@ -336,7 +319,7 @@ namespace Vban.Model
             [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
             public class Builder<T, TS> : IBuilder<Factory<T, TS>> where T : TS
             {
-                internal Builder(VBAN.Protocol<T> protocol)
+                public Builder(VBAN.Protocol<T> protocol)
                 {
                     Protocol = protocol;
 
@@ -380,6 +363,10 @@ namespace Vban.Model
                 {
                     if (Protocol == null)
                         throw new InvalidOperationException("No protocol defined");
+                    if (SampleRate == null)
+                        throw new InvalidOperationException("No sample rate defined");
+                    if (Format == null)
+                        throw new InvalidOperationException("No format defined");
 
                     return new Factory<T, TS>(Protocol, SampleRate, Samples, Channel, Format, Codec,
                         StreamName);
