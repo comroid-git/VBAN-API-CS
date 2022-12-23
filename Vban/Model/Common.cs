@@ -26,9 +26,4 @@ namespace Vban.Model
         {
         }
     }
-
-    [Obsolete]
-    public class UnfinishedByteArray : ByteArray
-    {
-    }
 }

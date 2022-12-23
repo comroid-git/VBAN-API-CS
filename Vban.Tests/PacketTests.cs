@@ -8,7 +8,7 @@ namespace Vban.Tests
     // ReSharper disable once InconsistentNaming
     public class VBANPacketTest
     {
-        
+        // todo todo todo
         private VBANPacket<string>.Factory<string, string> _factory;
 
         [SetUp]
