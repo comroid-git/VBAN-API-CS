@@ -4,9 +4,9 @@
         <TargetFramework>net5.0</TargetFramework>
         <IsPackable>true</IsPackable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.2.0</PackageVersion>
+        <PackageVersion>0.3.0</PackageVersion>
         <Title>VBAN Remote API</Title>
-        <Authors>Kaleidox "burdoto"</Authors>
+        <Authors>comroid, Kaleidox</Authors>
         <Description>C# port of burdoto's Java VBAN-API</Description>
         <PackageProjectUrl>https://github.com/burdoto/VBAN-API-CS</PackageProjectUrl>
         <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</PackageLicenseUrl>
@@ -14,6 +14,8 @@
         <RepositoryUrl>https://github.com/burdoto/VBAN-API-CS</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>vban, vb-audio, vban-api, voicemeeter, remote, audio</PackageTags>
+        <Company>comroid</Company>
+        <AssemblyVersion>0.3.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
