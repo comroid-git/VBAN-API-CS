@@ -19,15 +19,16 @@ namespace Vban
         protected VBANStreamBase(
             bool canRead,
             bool canWrite,
-            IPAddress ipAddress,
-            int port = VBAN.DefaultPort)
+            IPEndPoint ip,
+            UdpClient client)
         {
             CanRead = canRead;
             CanWrite = canWrite;
 
             Length = 0;
-
-            _client = new UdpClient(IpEndPoint = new IPEndPoint(ipAddress, port));
+            
+            IpEndPoint = ip;
+            _client = client;
         }
 
         public IPEndPoint IpEndPoint { get; }
@@ -65,7 +66,7 @@ namespace Vban
     public class VBANInputStreamBase<T> : VBANStreamBase
     {
         public VBANInputStreamBase(VBAN.Protocol<T> expectedProtocol, IPAddress ipAddress, int port)
-            : base(true, false, ipAddress, port)
+            : base(true, false, new IPEndPoint(ipAddress, port), new UdpClient(new IPEndPoint(ipAddress, port)))
         {
             ExpectedProtocol = expectedProtocol;
         }
@@ -139,7 +140,7 @@ namespace Vban
             IFactory<VBANPacket<T>> packetFactory,
             IPAddress ipAddress,
             int port = VBAN.DefaultPort
-        ) : base(false, true, ipAddress, port)
+        ) : base(false, true, new IPEndPoint(ipAddress, port), new UdpClient(AddressFamily.InterNetwork))
         {
             PacketFactory = packetFactory;
             Buf = new ByteArray();
